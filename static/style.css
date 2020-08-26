@@ -1,0 +1,98 @@
+body {
+ padding-top: 20px;
+ padding-bottom: 20px;
+
+}
+
+.header, .footer {
+ padding-right: 15px;
+ padding-left: 15px;
+ background-color: #314D68;
+  border-top-right-radius: 5px ;
+    border-top-left-radius: 5px ;
+
+  }
+
+.header {
+ padding-bottom: 20px;
+ border-bottom: 1px solid #e5e5e5;
+}
+
+.header h4 {
+	text-align: center;
+ margin-top: 2px;
+ marker-left:5px;
+ margin-bottom: 0;
+ line-height: 40px;
+ color:white;
+}
+
+.footer {
+ padding-top: 19px;
+ color: #777;
+ border-top: 1px solid #e5e5e5;
+  margin-top: 2px;
+ marker-left:5px;
+}
+
+@media (min-width: 768px) {
+ .container {
+ max-width: 730px;
+ }
+}
+
+.container-narrow > hr {
+ margin: 30px 0;
+}
+
+.jumbotron {
+ text-align: center;
+ border-bottom: 1px solid #e5e5e5;
+ padding-top: 20px;
+ padding-bottom: 20px;
+}
+
+.bodyDiv{
+ text-align: center;
+}
+
+@media screen and (min-width: 768px) {
+ .header,
+ .footer {
+ padding-right: 0;
+ padding-left: 0;
+}
+
+.header {
+ margin-bottom: 30px;
+}
+
+.jumbotron {
+ border-bottom: 0;
+}
+}
+
+@media screen and (max-width: 500px) {
+ .slidecontainer{
+ display: none;
+ }
+}
+
+.slidecontainer{
+ float: left;
+ width: 30%;
+}
+
+.jumbotronHeading{
+ margin-bottom: 7vh;
+}
+
+.canvasDiv{
+ display: flow-root;
+ text-align: center;
+}
+.footer p
+{
+	text-align: center;
+	color: white;
+}
