@@ -25,7 +25,8 @@ import numpy as np
 import json 
 import codecs
 from torch import tensor
-label_path = 'label.json'
+label_path = 'via_project_26Aug2020_11h59m_json (1).json'
+
 # def setup_model():
 # 	cfg = get_cfg()
 # 	cfg.merge_from_file(model_zoo.get_config_file("COCO-Detection/retinanet_R_101_FPN_3x.yaml"))
@@ -84,23 +85,37 @@ def draw_output(torchint_preds, torch_bbox, img):
 	return img
 
 
-def generate_label_bboxes():
-  data = json.load(codecs.open(label_path, 'r', 'utf-8-sig')) 
-  parking_spaces = data['parking']['space']
-  bbox_arr = []
-  bbox = []
-  for parking_space in parking_spaces:
-    coordinates = parking_space['contour']['point']
-    npts = []
-    xs = []
-    ys = []
-    for item in coordinates:
-      x, y = int(item['_x']), int(item['_y'])
-      xs.append(x)
-      ys.append(y)
+# def generate_label_bboxes():
+#   data = json.load(codecs.open(label_path, 'r', 'utf-8-sig')) 
+#   parking_spaces = data['parking']['space']
+#   bbox_arr = []
+#   bbox = []
+#   for parking_space in parking_spaces:
+#     coordinates = parking_space['contour']['point']
+#     npts = []
+#     xs = []
+#     ys = []
+#     for item in coordinates:
+#       x, y = int(item['_x']), int(item['_y'])
+#       xs.append(x)
+#       ys.append(y)
 
-    xmin, ymin, xmax, ymax = min(xs), min(ys), max(xs), max(ys)
-    bbox.append([xmin, ymin, xmax, ymax])
-  bbox_arr = np.asarray(bbox)
+#     xmin, ymin, xmax, ymax = min(xs), min(ys), max(xs), max(ys)
+#     bbox.append([xmin, ymin, xmax, ymax])
+#   bbox_arr = np.asarray(bbox)
+#   torch_bbox = tensor(bbox_arr)
+#   return torch_bbox
+
+def generate_label_bboxes_via():
+  f = open(label_path)
+  data = json.load(f)
+  space_list = data['output.jpg1428438']['regions']
+  bbox_list = []
+  for space in space_list:
+    bbox = space['shape_attributes']
+    h,w,x,y = bbox['height'], bbox['width'], bbox['x'], bbox['y'] 
+    x1,y1,x2,y2 = map(int,(x/3, y/3, (x + w)/3, (y + h)/3))
+    bbox_list.append([x1, y1, x2, y2])
+  bbox_arr = np.asarray(bbox_list)
   torch_bbox = tensor(bbox_arr)
   return torch_bbox

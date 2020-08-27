@@ -101,7 +101,8 @@ def upload_file():
 			#pred=tyre_classification(img)
 			predictor, cfg = model.setup_model()
 			print("predictor generated")
-			torch_bbox = model.generate_label_bboxes()
+			torch_bbox = model.generate_label_bboxes_via()
+			print('shape:', torch_bbox.shape)
 			torchint_preds = model.gen_bbox_predictions(img, predictor)
 			image_out = model.draw_output(torchint_preds, torch_bbox, img)
 			name = filename.split(".")[:-1][0]
