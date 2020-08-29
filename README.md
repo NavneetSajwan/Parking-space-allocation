@@ -26,9 +26,12 @@ Here is the link to the dataset: [Parking Lot dataset](https://www.kaggle.com/bl
 
 There are three parking lots in the dataset. I chose one of them.
 
-Next thing in line is to label the parking spots. You are free to go ahead and manually label the parking spots of your choice in the image with a labelling tool of your choice. I was about to do the same just before I found that each image in the dataset is associated with a label in xml format. Each image has 39 predefined parking spots. Depending upon whether a car is parked there or not, these are labelled as vacant or occupied alongwith the coordinates of the rectangles that cover the parking spots.
+Next thing in line is to label the parking spots. You are free to go ahead and manually label the parking spots in the image with a labelling tool of your choice. I was about to do the same just before I found that each image in the dataset is associated with a label in xml format. Each image has 39 predefined parking spots. Depending upon whether a car is parked there or not, these are labelled as vacant or occupied alongwith the coordinates of the rectangles that cover the parking spots.
 
-I downloaded one of them and ran a python script to convert them to store them in a PyTorch tensor. This is how it looks.
+I downloaded one of the label file and ran a python script to convert them to store them in a PyTorch tensor. I am more comfortable with `json` format when it comes to label and metadata, so I converted the `xml` labels to `json`. You can do that online on [Code beautifier](https://codebeautify.org/).
+
+Once I had the `json` labels, I the called the function below to save the `parking spot` coordinates in a PyTorch tensor `torch_bbox`  
+
 
 One interesting thing to notice here is that, we have rotated rectangles here, while model does not predict rotated rectangles. So, if we are going to measure overlap between the two we need to either rotate the model predictions or straighten the parking spots. 
 
