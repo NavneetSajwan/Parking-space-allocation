@@ -85,26 +85,26 @@ def draw_output(torchint_preds, torch_bbox, img):
 	return img
 
 
-# def generate_label_bboxes():
-#   data = json.load(codecs.open(label_path, 'r', 'utf-8-sig')) 
-#   parking_spaces = data['parking']['space']
-#   bbox_arr = []
-#   bbox = []
-#   for parking_space in parking_spaces:
-#     coordinates = parking_space['contour']['point']
-#     npts = []
-#     xs = []
-#     ys = []
-#     for item in coordinates:
-#       x, y = int(item['_x']), int(item['_y'])
-#       xs.append(x)
-#       ys.append(y)
+def generate_label_bboxes():
+  data = json.load(codecs.open(label_path, 'r', 'utf-8-sig')) 
+  parking_spaces = data['parking']['space']
+  bbox_arr = []
+  bbox = []
+  for parking_space in parking_spaces:
+    coordinates = parking_space['contour']['point']
+    npts = []
+    xs = []
+    ys = []
+    for item in coordinates:
+      x, y = int(item['_x']), int(item['_y'])
+      xs.append(x)
+      ys.append(y)
 
-#     xmin, ymin, xmax, ymax = min(xs), min(ys), max(xs), max(ys)
-#     bbox.append([xmin, ymin, xmax, ymax])
-#   bbox_arr = np.asarray(bbox)
-#   torch_bbox = tensor(bbox_arr)
-#   return torch_bbox
+    xmin, ymin, xmax, ymax = min(xs), min(ys), max(xs), max(ys)
+    bbox.append([xmin, ymin, xmax, ymax])
+  bbox_arr = np.asarray(bbox)
+  torch_bbox = tensor(bbox_arr)
+  return torch_bbox
 
 def generate_label_bboxes_via():
   f = open(label_path)
