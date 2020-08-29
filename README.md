@@ -32,6 +32,24 @@ I downloaded one of the label file and ran a python script to convert them to st
 
 Once I had the `json` labels, I the called the function below to save the `parking spot` coordinates in a PyTorch tensor `torch_bbox`  
 
+```
+def generate_label_ploygons(img_path, label_path):
+  data = json.load(codecs.open(label_path, 'r', 'utf-8-sig')) 
+  img = cv2.imread(img_path)
+  parking_spaces = data['parking']['space']
+  for parking_space in parking_spaces:
+    coordinates = parking_space['contour']['point']
+    npts = []
+    xs = []
+    ys = []
+    for item in coordinates:
+      x, y = int(item['_x']), int(item['_y'])
+      npts.append([x, y])
+    img = draw_poly(img, npts)
+  return img
+
+```
+
 
 One interesting thing to notice here is that, we have rotated rectangles here, while model does not predict rotated rectangles. So, if we are going to measure overlap between the two we need to either rotate the model predictions or straighten the parking spots. 
 
