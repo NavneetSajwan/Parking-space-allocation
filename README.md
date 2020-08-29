@@ -2,28 +2,27 @@
 
 This project is about automatically detecting whether a vehicle is parked in the parking spot or not. Also, we count the number of vacant and occupied spaces.
 
-Since, it is a classic object detection problem, to generate a vanilla baseline solution I chose a pretrained model from Detectron2 modelzoo. The model is trained on COCO dataset which means, our model is ready detect cars, buses and trucks.
+Since, it is a classic object detection problem, to generate a vanilla baseline solution I chose a pretrained model from Detectron2 modelzoo. The model is trained on COCO dataset which means, our model is ready to detect cars, buses and trucks.
 
 ## Approach
-Detecting vehicles is no more a challenge with off-the-self object detection models. We don't even need to fine tune the model to our custom classes. Since, cars are already present in COCO dataset.
-Once we detect the vehicle, we can measure the amount of overlap between the parking spot and the car. If the amount of overlap is above a threshold, we signal vehicle is parked in the parking spot.
+
+Detecting vehicles is no more a challenge with off-the-self object detection models. Since, cars are already present in COCO dataset we don't even need to fine tune the model to our custom classes. Once we detect the vehicle, we can measure the amount of overlap between the parking spot and the car. If the amount of overlap is above a threshold, we signal vehicle is parked in the parking spot.
 
 The challenge is to define what exactly a parking spot is ? How can the model detect a parking place ? Different parking lots have different types parking spots. Can there be a solution where we detect parking spots in any parking place and if yes what would be the features of a parking spot?
 
-We will come to these questions later. For now, we assume that the answer is no to all of them.
+We will come to these questions later.
 
-So, one way is to manually label all the parking spots in the image.
+For now, we are going to manually label all the parking spots in the image.
 
 ## Data
 
-
 There is a huge dataset (approx. 10 GB)  of parking lot images on Kaggle. But we don't need that large a dataset for our problem. 
-The solution we are creating has some constraints:
+The baseline solution we are creating has some constraints:
 
-1. We get to choose one parking lot
-2. All the test images of the parking lot must be from one camera, whose poition does not vary with images. Basically, it cannot be a hand-held camera. It can be a cctv camera.
+1. We get to choose one parking lot.
+2. All the test images of the parking lot must be from one camera, whose position does not vary with time. Basically, it cannot be a hand-held camera e.g. cctv cameras.
 
-Here is the link to the dataset:
+Here is the link to the dataset: [Parking Lot dataset](https://www.kaggle.com/blanderbuss/parking-lot-dataset)
 
 There are three parking lots in the dataset. I chose one of them.
 
@@ -55,10 +54,12 @@ IOU threshold is hyperparameter to tune here, for this parking lot approx 0.3 wo
 
 IOU function takes in two boxes (a parking spot and a model predicted box) and gives iou of them. If a parking spot has greater iou than the threshold for any of the predicted boxes, we draw it on the image with green color otherwise with the red color.
 
-Basically for every parking spot we loop over every predicted box and store the ious of each parking spot in a list. Choose the maximum iou, if iou> threshold, voila.., spot is occupied. It is inefficient, but we will worry about that later. For now, I can just say, I stored boxes as tensors for a reason.
+Basically for every parking spot we loop over every predicted box and store the IOUs of each parking spot in a list. Choose the maximum iou, and if iou> threshold, voila.., spot is occupied. It is inefficient, but we will worry about that later. For now, I can just say, I stored boxes as tensors for a reason.
 
 
 ## Visualising results
+
+
 
 
 
