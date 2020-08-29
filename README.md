@@ -74,6 +74,9 @@ def generate_label_bboxes(img_path, label_path):
     img = cv2.rectangle(img,(xmin, ymin), (xmax, ymax),(0,255, 0), 2)
   return img
 ```
+Here is how it looks
+
+![alt text](https://github.com/NavneetSajwan/Parking-space-allocation/blob/master/images/regular_boxes.png "Logo Title Text 1")
 
 Next, we go ahead and detect cars with our model.
 
