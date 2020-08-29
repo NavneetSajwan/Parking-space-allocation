@@ -49,3 +49,16 @@ As far as overlap calculation is concerned, IOU is the goto solution in deep lea
 
 Intersection Over Union, abbreviated as IOU is a ....
 
+I found this code on PyImagesearch website to calculate IOU.
+
+IOU threshold is hyperparameter to tune here, for this parking lot approx 0.3 worked out well.
+
+IOU function takes in two boxes (a parking spot and a model predicted box) and gives iou of them. If a parking spot has greater iou than the threshold for any of the predicted boxes, we draw it on the image with green color otherwise with the red color.
+
+Basically for every parking spot we loop over every predicted box and store the ious of each parking spot in a list. Choose the maximum iou, if iou> threshold, voila.., spot is occupied. It is inefficient, but we will worry about that later. For now, I can just say, I stored boxes as tensors for a reason.
+
+
+## Visualising results
+
+
+
