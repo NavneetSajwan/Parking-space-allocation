@@ -6,7 +6,7 @@ Since, it is a classic object detection problem, to generate a vanilla baseline 
 
 ## Approach
 
-Detecting vehicles is no more a challenge with off-the-self object detection models. Since, cars are already present in COCO dataset we don't even need to fine tune the model to our custom classes. Once we detect the vehicle, we can measure the amount of overlap between the parking spot and the car. If the amount of overlap is above a threshold, we signal vehicle is parked in the parking spot.
+Detecting vehicles is no more a challenge especially with off-the-self object detection models. Since, cars are already present in COCO dataset we don't even need to fine tune the model to our custom classes. Once we detect the vehicle, we can measure the amount of overlap between the parking spot and the car. If the amount of overlap is above a threshold, we signal vehicle is parked in the parking spot.
 
 The challenge is to define what exactly a parking spot is ? How can the model detect a parking place ? Different parking lots have different types parking spots. Can there be a solution where we detect parking spots in any parking place and if yes what would be the features of a parking spot?
 
@@ -53,7 +53,7 @@ def generate_label_ploygons(img_path, label_path):
 
 One interesting thing to notice here is that, we have an irregular quadrilateral here, whereas object detection models predict rectanglular boxes. So, if we are going to calculate overlap between the two we need to turn the parking spots into rectangles. 
 
-We have to modify the above function slightly, to get rectangular labels/parking spaces
+We have to modify the above code slightly, to get rectangular labels/parking spaces
 
 ```
 def generate_label_bboxes(img_path, label_path):
@@ -78,6 +78,29 @@ Here is how it looks
 
 ![alt text](https://github.com/NavneetSajwan/Parking-space-allocation/blob/master/images/regular_boxes.png "Logo Title Text 1")
 
+Transformation looks great, but we need to store these boxes into an object and instead of returning the image we need to return the object
+
+```
+def generate_label_bboxes(label_path):
+  data = json.load(codecs.open(label_path, 'r', 'utf-8-sig')) 
+  parking_spaces = data['parking']['space']
+  bbox_arr = []
+  bbox = []
+  for parking_space in parking_spaces:
+    coordinates = parking_space['contour']['point']
+    xs = []
+    ys = []
+    for item in coordinates:
+      x, y = int(item['_x']), int(item['_y'])
+      xs.append(x)
+      ys.append(y)
+    xmin, ymin, xmax, ymax = min(xs), min(ys), max(xs), max(ys)
+    bbox.append([xmin, ymin, xmax, ymax])
+  bbox_arr = np.asarray(bbox)
+  torch_bbox = tensor(bbox_arr)
+  return torch_bbox
+```
+It now returns a Pytorch tensor 'torch_bbox' containing all the 'parking space boxes'
 Next, we go ahead and detect cars with our model.
 
 I then find how many cars are overlapping to how many boxes and to what extent. If overlap is good enough, we predict the car is parked.
