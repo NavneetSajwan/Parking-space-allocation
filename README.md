@@ -26,7 +26,7 @@ Here is the link to the dataset: [Parking Lot dataset](https://www.kaggle.com/bl
 
 There are three parking lots in the dataset. I chose one of them.
 
-Next thing in line is to label the parking spots. You are free to go ahead and manually label the parking spots in the image with a labelling tool of your choice. I was about to do the same just before I found that each image in the dataset is associated with a label in xml format. Each image has 39 predefined parking spots. Depending upon whether a car is parked there or not, these are labelled as vacant or occupied alongwith the coordinates of the rectangles that cover the parking spots.
+Next thing in line is to label the parking spots. You can go ahead and manually label the parking spots in the image with a labelling tool of your choice. I was about to do the same just before I found that each image in the dataset is associated with a label in xml format. Each image has 39 predefined parking spots. Depending upon whether a car is parked there or not, these are labelled as vacant or occupied alongwith the coordinates of the rectangles that cover the parking spots.
 
 I downloaded one of the label file and ran a python script to convert them to store them in a PyTorch tensor. I am more comfortable with `json` format when it comes to label and metadata, so I converted the `xml` labels to `json`. You can do that online on [Code beautifier](https://codebeautify.org/).
 
@@ -51,11 +51,29 @@ def generate_label_ploygons(img_path, label_path):
 ![alt text](https://github.com/NavneetSajwan/Parking-space-allocation/blob/master/images/download%20(1).png "Logo Title Text 1")
 
 
-One interesting thing to notice here is that, we have rotated rectangles here, while model does not predict rotated rectangles. So, if we are going to measure overlap between the two we need to either rotate the model predictions or straighten the parking spots. 
+One interesting thing to notice here is that, we have an irregular quadrilateral here, whereas object detection models predict rectanglular boxes. So, if we are going to calculate overlap between the two we need to turn the parking spots into rectangles. 
 
-While rotated boxes definitely give us more information about how the vehicle is oriented and hence, would give accurate solution. But the caveat here is model does not have orientation info and thus the straight boxes. 
+We have to modify the above function slightly, to get rectangular labels/parking spaces
 
-So, we go ahead and straighten the rotated boxes with this python script.
+```
+def generate_label_bboxes(img_path, label_path):
+  img = cv2.imread(img_path)
+  data = json.load(codecs.open(label_path, 'r', 'utf-8-sig')) 
+  parking_spaces = data['parking']['space']
+  bbox_arr = []
+  bbox = []
+  for parking_space in parking_spaces:
+    coordinates = parking_space['contour']['point']
+    xs = []
+    ys = []
+    for item in coordinates:
+      x, y = int(item['_x']), int(item['_y'])
+      xs.append(x)
+      ys.append(y) 
+    xmin, ymin, xmax, ymax = min(xs), min(ys), max(xs), max(ys)
+    img = cv2.rectangle(img,(xmin, ymin), (xmax, ymax),(0,255, 0), 2)
+  return img
+```
 
 Next, we go ahead and detect cars with our model.
 
