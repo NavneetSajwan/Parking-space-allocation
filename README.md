@@ -40,8 +40,6 @@ def generate_label_ploygons(img_path, label_path):
   for parking_space in parking_spaces:
     coordinates = parking_space['contour']['point']
     npts = []
-    xs = []
-    ys = []
     for item in coordinates:
       x, y = int(item['_x']), int(item['_y'])
       npts.append([x, y])
