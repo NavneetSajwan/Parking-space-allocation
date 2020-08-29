@@ -100,8 +100,70 @@ def generate_label_bboxes(label_path):
   torch_bbox = tensor(bbox_arr)
   return torch_bbox
 ```
-It now returns a Pytorch tensor 'torch_bbox' containing all the 'parking space boxes'
+It now returns a Pytorch tensor `torch_bbox` containing all the `parking space boxes`
+
 Next, we go ahead and detect cars with our model.
+
+## Model
+
+We use FAIR's (Facebook AI Research) Detectron2 api for our problem. It has a number of pretrained models. I am using `Faster RCNN` architecture in this project.
+Using the function below first we load the model
+
+```
+def setup_model():
+	cfg = get_cfg()
+	cfg.merge_from_file(model_zoo.get_config_file("COCO-Detection/retinanet_R_50_FPN_3x.yaml"))
+	cfg.MODEL.RETINANET.NMS_THRESH_TEST = 0.5 # lower value decreases the number of reduntant boxes
+	cfg.MODEL.RETINANET.SCORE_THRESH_TEST = 0.5
+	cfg.MODEL.WEIGHTS = model_zoo.get_checkpoint_url("COCO-Detection/retinanet_R_50_FPN_3x.yaml")
+	predictor = DefaultPredictor(cfg)
+	return predictor, cfg
+```
+It returns a predictor to which we can pass numpy images as argument.
+
+Let's write a function to visualize the output of predictor
+```
+def visualize_preds(img, predictor):
+  outputs = predictor(img)
+  v = Visualizer(im[:, :, ::-1],
+             MetadataCatalog.get(cfg.DATASETS.TRAIN[0]),
+             scale=1.0,
+             instance_mode = ColorMode.SEGMENTATION
+             )
+  v = v.draw_instance_predictions(op["instances"].to("cpu"))
+  img_out = v.get_image()[:, :, ::-1]
+  return img_out
+```
+The above code is written around Detectron2 api. It returns a numpy image with boxes drawn around objects.
+We call this function and display the image
+
+```
+img = cv2.imread(img_path)
+img_out = visualize_preds(img, predictor)
+cv2.imshow(img_out)
+```
+#output detects things other than vehicles
+
+#So, we write code to choose only the vehicles
+
+#display results. works fine
+
+#Now write a function to return boxes as pytorch tensors
+```
+def gen_bbox_predictions(im, predictor):
+  outputs = predictor(im)
+
+  a = outputs["instances"].pred_classes
+  indices = (a==2).nonzero().flatten()
+  op = custom_output(outputs, indices, im)
+
+  preds = op['instances'].pred_boxes
+  torch_preds = preds.tensor
+  torchint_preds = torch_preds.type(torch.IntTensor)
+  print('tip type', type(torchint_preds))
+  return torchint_preds
+```
+
 
 I then find how many cars are overlapping to how many boxes and to what extent. If overlap is good enough, we predict the car is parked.
 
