@@ -50,6 +50,8 @@ def generate_label_ploygons(img_path, label_path):
 
 ```
 
+![alt text](https://github.com/NavneetSajwan/Parking-space-allocation/blob/master/images/download%20(1).png "Logo Title Text 1")
+
 
 One interesting thing to notice here is that, we have rotated rectangles here, while model does not predict rotated rectangles. So, if we are going to measure overlap between the two we need to either rotate the model predictions or straighten the parking spots. 
 
