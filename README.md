@@ -142,6 +142,8 @@ outputs = predictor(img)
 img_out = visualize_preds(outputs, cfg, img)
 cv2.imshow(img_out)
 ```
+[!alt text](https://github.com/NavneetSajwan/Parking-space-allocation/blob/master/images/model_results.jpg)
+
 #output detects things other than vehicles
 
 #So, we write code to choose only the vehicles
