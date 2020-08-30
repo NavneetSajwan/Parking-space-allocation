@@ -144,9 +144,10 @@ cv2.imshow(img_out)
 ```
 ![alt text](https://github.com/NavneetSajwan/Parking-space-allocation/blob/master/images/model_results.jpg)
 
-#output detects things other than vehicles
+Results look great, but this model as of now predicts all the classes in the COCO dataset. But we just want vehicles.
+Let's assume our usecase asks us to detect only the parked cars. But our model is predicting trucks too.
 
-#So, we write code to choose only the vehicles
+So, we write code to choose only the cars. For that we need to know the numeric id of `cars` in `COCO dataset`. 
 ```
 def gen_car_bboxes(im, predictor):
   outputs = predictor(im)

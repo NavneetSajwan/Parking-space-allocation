@@ -42,6 +42,15 @@ def setup_model():
 	predictor = DefaultPredictor(cfg)
 	return predictor, cfg
 
+def gen_car_bboxes(im, predictor):
+  outputs = predictor(im)
+
+  a = outputs["instances"].pred_classes
+  indices = (a==2).nonzero().flatten()
+  output_cars = custom_output(outputs, indices, im)
+
+  return output_cars
+
 def visualize_preds(outputs, cfg,  im):
   v = Visualizer(im[:, :, ::-1],
              MetadataCatalog.get(cfg.DATASETS.TRAIN[0]),
