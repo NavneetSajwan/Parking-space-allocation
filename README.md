@@ -159,7 +159,7 @@ def gen_car_bboxes(im, predictor):
   return output_cars
 
 ```
-
+![](https://github.com/NavneetSajwan/Parking-space-allocation/blob/master/images/model_car_output.jpg)
 #display results. works fine
 
 #Now write a function to return boxes as pytorch tensors
