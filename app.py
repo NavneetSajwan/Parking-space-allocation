@@ -33,7 +33,7 @@ from time import sleep
 #create session in flask 
 #https://www.youtube.com/watch?v=iIhAfX4iek0
 #https://techwithtim.net/tutorials/flask/sessions/
-
+label_path = 'labels/label.json'
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 
 UPLOAD_FOLDER = os.getcwd() + '/static/uploads/'
@@ -101,10 +101,13 @@ def upload_file():
 			#pred=tyre_classification(img)
 			predictor, cfg = model.setup_model()
 			print("predictor generated")
-			torch_bbox = model.generate_label_bboxes_via()
+			# outputs = predictor(img)
+			# image_out = model.visualize_preds(outputs, cfg, img)
+			# torch_bbox = model.generate_label_bboxes_via()
+			torch_bbox = model.generate_label_bboxes(label_path)
 			print('shape:', torch_bbox.shape)
 			torchint_preds = model.gen_bbox_predictions(img, predictor)
-			image_out = model.draw_output(torchint_preds, torch_bbox, img)
+			image_out = model.draw_output(torchint_preds, torch_bbox, img, 0.3)
 			name = filename.split(".")[:-1][0]
 			ext = filename.split(".")[-1]
 			file_name=name+'_final_.'+ext

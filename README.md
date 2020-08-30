@@ -33,7 +33,7 @@ I downloaded one of the label file and ran a python script to convert them to st
 Once I had the `json` labels, I the called the function below to save the `parking spot` coordinates in a PyTorch tensor `torch_bbox`  
 
 ```
-def generate_label_ploygons(img_path, label_path):
+def generate_label_polygons(img_path, label_path):
   data = json.load(codecs.open(label_path, 'r', 'utf-8-sig')) 
   img = cv2.imread(img_path)
   parking_spaces = data['parking']['space']
@@ -56,7 +56,7 @@ One interesting thing to notice here is that, we have an irregular quadrilateral
 We have to modify the above code slightly, to get rectangular labels/parking spaces
 
 ```
-def generate_label_bboxes(img_path, label_path):
+def generate_label_bboxes_img(img_path, label_path):
   img = cv2.imread(img_path)
   data = json.load(codecs.open(label_path, 'r', 'utf-8-sig')) 
   parking_spaces = data['parking']['space']
@@ -123,13 +123,13 @@ It returns a predictor to which we can pass numpy images as argument.
 
 Let's write a function to visualize the output of predictor
 ```
-def visualize_preds(outputs):
+def visualize_preds(outputs, cfg,  im):
   v = Visualizer(im[:, :, ::-1],
              MetadataCatalog.get(cfg.DATASETS.TRAIN[0]),
              scale=1.0,
              instance_mode = ColorMode.SEGMENTATION
              )
-  v = v.draw_instance_predictions(op["instances"].to("cpu"))
+  v = v.draw_instance_predictions(outputs["instances"].to("cpu"))
   img_out = v.get_image()[:, :, ::-1]
   return img_out
 ```
@@ -140,7 +140,7 @@ We call this function and display the image
 img = cv2.imread(img_path)
 predictor, cfg = setup_model()
 outputs = predictor(img)
-img_out = visualize_preds(outputs)
+img_out = visualize_preds(outputs, cfg, img)
 cv2.imshow(img_out)
 ```
 #output detects things other than vehicles
