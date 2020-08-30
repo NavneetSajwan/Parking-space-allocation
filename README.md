@@ -19,18 +19,18 @@ For now, we are going to manually label all the parking spots in the image.
 There is a huge dataset (approx. 10 GB)  of parking lot images on Kaggle. But we don't need that large a dataset for our problem. 
 The baseline solution we are creating has some constraints:
 
-1. We get to choose one parking lot.
-2. All the test images of the parking lot must be from one camera, whose position does not vary with time. Basically, it cannot be a hand-held camera e.g. cctv cameras.
+1. For every parking lot, we have to manually draw boxes around parking spots.
+2. All the test images of the parking lot must be from a single stationary camera.
 
 Here is the link to the dataset: [Parking Lot dataset](https://www.kaggle.com/blanderbuss/parking-lot-dataset)
 
 There are three parking lots in the dataset. I chose one of them.
 
-Next thing in line is to label the parking spots. You can go ahead and manually label the parking spots in the image with a labelling tool of your choice. I was about to do the same just before I found that each image in the dataset is associated with a label in xml format. Each image has 39 predefined parking spots. Depending upon whether a car is parked there or not, these are labelled as vacant or occupied alongwith the coordinates of the rectangles that cover the parking spots.
+Next thing in line is to label the parking spots. We can go ahead and manually label the parking spots in the image with a labelling tool. I was about to do the same but I found that each image in the dataset is associated with a label in `xml` format. Each image has 40 predefined parking spots. Depending upon whether a car is parked there or not, these are labelled as vacant or occupied alongwith the coordinates of the rectangles that cover the parking spots.
 
-I downloaded one of the label file and ran a python script to convert them to store them in a PyTorch tensor. I am more comfortable with `json` format when it comes to label and metadata, so I converted the `xml` labels to `json`. You can do that online on [Code beautifier](https://codebeautify.org/).
+I am more comfortable with `json` format when it comes to labels and metadata, so I converted the `xml` labels to `json`. You can do that online on [Code beautifier](https://codebeautify.org/).
 
-Once I had the `json` labels, I the called the function below to save the `parking spot` coordinates in a PyTorch tensor `torch_bbox`  
+I wrote the function below to extract all polygons bounding the parking spots and display them onto an image.
 
 ```
 def generate_label_polygons(img_path, label_path):
@@ -51,9 +51,8 @@ def generate_label_polygons(img_path, label_path):
 ![alt text](https://github.com/NavneetSajwan/Parking-space-allocation/blob/master/images/download%20(1).png "Logo Title Text 1")
 
 
-One interesting thing to notice here is that, we have an irregular quadrilateral here, whereas object detection models predict rectanglular boxes. So, if we are going to calculate overlap between the two we need to turn the parking spots into rectangles. 
+One interesting thing to notice here is that, we have irregular quadrilaterals here, whereas object detection models predict rectanglular boxes. So, if we are going to calculate overlap between the two we need to turn the parking spots into rectangles. 
 
-We have to modify the above code slightly, to get rectangular labels/parking spaces
 
 ```
 def generate_label_bboxes_img(img_path, label_path):
@@ -112,10 +111,10 @@ Using the function below first we load the model
 ```
 def setup_model():
 	cfg = get_cfg()
-	cfg.merge_from_file(model_zoo.get_config_file("COCO-Detection/retinanet_R_50_FPN_3x.yaml"))
+	cfg.merge_from_file(model_zoo.get_config_file("COCO-Detection/faster_rcnn_X_101_32x8d_FPN_3x.yaml"))
 	cfg.MODEL.RETINANET.NMS_THRESH_TEST = 0.5 # lower value decreases the number of reduntant boxes
 	cfg.MODEL.RETINANET.SCORE_THRESH_TEST = 0.5
-	cfg.MODEL.WEIGHTS = model_zoo.get_checkpoint_url("COCO-Detection/retinanet_R_50_FPN_3x.yaml")
+	cfg.MODEL.WEIGHTS = model_zoo.get_checkpoint_url("COCO-Detection/faster_rcnn_X_101_32x8d_FPN_3x.yaml")
 	predictor = DefaultPredictor(cfg)
 	return predictor, cfg
 ```
