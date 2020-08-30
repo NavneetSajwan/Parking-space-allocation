@@ -212,33 +212,44 @@ def bb_intersection_over_union(boxA, boxB):
 ```
 IOU function takes in two boxes (a parking spot and a model predicted box) and gives iou of them. If a parking spot has greater iou than the threshold for any of the predicted boxes, we draw it on the image with green color otherwise with the red color.
 
+Basically for every parking spot we loop over every predicted box and store the IOUs of each parking spot in a list. Choose the maximum iou, and if iou is greater than the threshold, then the spot is occupied. The idea of loop inside loop sounds extremely inefficient but we will worry about that later. 
+
 
 ```
-def draw_output(torchint_preds, torch_bbox, img):
+def draw_output(torchint_preds, torch_bbox, img, iou_threshold = 0.3):
+  #loop over all the predefined parking spot boxes
   for label in torch_bbox:
       iou_list = []
+      #loop over model predicted boxes
       for pred in torchint_preds:
         iou = bb_intersection_over_union(label, pred)
         iou_list.append(iou)
         iou_max = max(iou_list)
-        if iou_max > 0.3:
+        if iou_max > iou_threshold:
+          #if spot is occupied, draw a green box
           color = (0,255,0)
         else:
+          #if spot is empty, draw a red box
           color = (0,0,255)
       img = cv2.rectangle(img,(label[0], label[1]), (label[2], label[3]), color, 2)
   return img
 
 ```
-IOU threshold is hyperparameter to tune here, for this parking lot approx 0.3 worked out well.
+`iou_threshold` is a hyperparameter to tune here.
 
-IOU function takes in two boxes (a parking spot and a model predicted box) and gives iou of them. If a parking spot has greater iou than the threshold for any of the predicted boxes, we draw it on the image with green color otherwise with the red color.
-
-Basically for every parking spot we loop over every predicted box and store the IOUs of each parking spot in a list. Choose the maximum iou, and if iou> threshold, voila.., spot is occupied. It is inefficient, but we will worry about that later. For now, I can just say, I stored boxes as tensors for a reason.
 
 
 ## Visualising results
 
+Now that our bits and pieces of code are ready, all that remains is to put this pieces together, run the code and visualize final results
 
+```
+predictor, cfg = model.setup_model()
+torch_bbox = model.generate_label_bboxes_via()
+torchint_preds = model.gen_bbox_predictions(img, predictor)
+image_out = model.draw_output(torchint_preds, torch_bbox, img)
+cv.imshow(image_out)
+```
 
-
+![alt text](https://github.com/NavneetSajwan/Parking-space-allocation/blob/master/images/datasets_87490_201391_PKLot_PKLot_UFPR05_Sunny_2013-03-01_2013-03-01_18_13_01_final_.jpg "Logo Title Text 1")
 
