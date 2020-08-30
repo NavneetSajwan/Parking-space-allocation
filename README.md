@@ -123,8 +123,7 @@ It returns a predictor to which we can pass numpy images as argument.
 
 Let's write a function to visualize the output of predictor
 ```
-def visualize_preds(img, predictor):
-  outputs = predictor(img)
+def visualize_preds(outputs):
   v = Visualizer(im[:, :, ::-1],
              MetadataCatalog.get(cfg.DATASETS.TRAIN[0]),
              scale=1.0,
@@ -139,12 +138,25 @@ We call this function and display the image
 
 ```
 img = cv2.imread(img_path)
-img_out = visualize_preds(img, predictor)
+predictor, cfg = setup_model()
+outputs = predictor(img)
+img_out = visualize_preds(outputs)
 cv2.imshow(img_out)
 ```
 #output detects things other than vehicles
 
 #So, we write code to choose only the vehicles
+```
+def gen_car_bboxes(im, predictor):
+  outputs = predictor(im)
+
+  a = outputs["instances"].pred_classes
+  indices = (a==2).nonzero().flatten()
+  output_cars = custom_output(outputs, indices, im)
+
+  return output_cars
+
+```
 
 #display results. works fine
 
