@@ -102,13 +102,13 @@ def upload_file():
 			predictor, cfg = model.setup_model()
 			print("predictor generated")
 			outputs = predictor(img)
-			output_cars = model.gen_car_bboxes(img, predictor)
-			image_out = model.visualize_preds(output_cars, cfg, img)
+			# output_cars = model.gen_car_bboxes(img, predictor)
+			# image_out = model.visualize_preds(output_cars, cfg, img)
 			# torch_bbox = model.generate_label_bboxes_via()
-			# torch_bbox = model.generate_label_bboxes(label_path)
-			# print('shape:', torch_bbox.shape)
-			# torchint_preds = model.gen_bbox_predictions(img, predictor)
-			# image_out = model.draw_output(torchint_preds, torch_bbox, img, 0.3)
+			torch_bbox = model.generate_label_bboxes(label_path)
+			print('shape:', torch_bbox.shape)
+			torchint_preds = model.gen_bbox_predictions(img, predictor)
+			image_out = model.draw_output(torchint_preds, torch_bbox, img, 0.3)
 			name = filename.split(".")[:-1][0]
 			ext = filename.split(".")[-1]
 			file_name=name+'_final_.'+ext
