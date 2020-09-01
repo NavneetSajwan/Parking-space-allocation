@@ -278,5 +278,5 @@ torchint_preds = model.gen_bbox_predictions(img, predictor)
 image_out = model.draw_output(torchint_preds, torch_bbox, img)
 cv.imshow(image_out)
 ```
-![alt text](https://github.com/NavneetSajwan/Parking-space-allocation/blob/master/images/img3_final_ "Logo Title Text 1")
+![alt text](https://github.com/NavneetSajwan/Parking-space-allocation/blob/master/images/img3_final_.jpg "Logo Title Text 1")
 
