@@ -16,6 +16,18 @@ The entire project can deployed on local server. I have written a REST API in Fl
 
 You are good to go. Upload an image and you'll see the results.
 
+## To-do
+
+1. Add documentation for automatic detection of parking spaces
+
+2. Add Vectorised operations of calculating IOU
+
+The code for the above two steps has already been written and tested in the 'parking_space_allocation.ipynb' jupyter notebook. Explanation and documentation remains.
+
+## Note to the readers
+
+You are invited to propose changes, contribute or collaborate in this project.
+
 ## Approach
 
 Detecting vehicles is no more a challenge especially with off-the-self object detection models. Since, cars are already present in COCO dataset we don't even need to fine tune the model to our custom classes. Once we detect the vehicle, we can measure the amount of overlap between the parking spot and the car. If the amount of overlap is above a threshold, we signal vehicle is parked in the parking spot.
