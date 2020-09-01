@@ -189,7 +189,7 @@ And this bring us to our next bit, how to measure the amount of overlap effectiv
 As far as overlap calculation is concerned, IOU is the goto solution in deep learning world. So, what is IOU?
 
 Intersection Over Union, abbreviated as IOU is an evaluation metric to measure the extent of overlap between two rectangular boxes.
-The amazing Adrian Rosebrock explains it on his [blog about IOU]https://www.pyimagesearch.com/2016/11/07/intersection-over-union-iou-for-object-detection/). 
+The amazing Adrian Rosebrock explains it on his [blog about IOU](https://www.pyimagesearch.com/2016/11/07/intersection-over-union-iou-for-object-detection/). 
 
 The code below is also taken from Adrian's website from the same blog.
 
