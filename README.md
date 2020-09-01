@@ -4,6 +4,18 @@ This project is about automatically detecting whether a vehicle is parked in the
 
 Since, it is a classic object detection problem, to generate a vanilla baseline solution I chose a pretrained model from Detectron2 modelzoo. The model is trained on COCO dataset which means, our model is ready to detect cars, buses and trucks.
 
+## Installation
+
+The entire project can deployed on local server. I have written a REST API in Flask for it. To use the model,
+
+1. Download the repository.
+
+1. Install dependencies from `requirements.txt`
+
+2. Fire up a terminal inside the repo and run `python app.py`
+
+You are good to go. Upload an image and you'll see the results.
+
 ## Approach
 
 Detecting vehicles is no more a challenge especially with off-the-self object detection models. Since, cars are already present in COCO dataset we don't even need to fine tune the model to our custom classes. Once we detect the vehicle, we can measure the amount of overlap between the parking spot and the car. If the amount of overlap is above a threshold, we signal vehicle is parked in the parking spot.
