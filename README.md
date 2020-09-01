@@ -151,7 +151,7 @@ So, we write code to choose only the cars. For that we need to know the numeric 
 ```
 def gen_car_bboxes(im, predictor):
   outputs = predictor(im)
-
+  # numeric id of cars in COCO dataset is 2
   a = outputs["instances"].pred_classes
   indices = (a==2).nonzero().flatten()
   output_cars = custom_output(outputs, indices, im)
@@ -160,9 +160,10 @@ def gen_car_bboxes(im, predictor):
 
 ```
 ![](https://github.com/NavneetSajwan/Parking-space-allocation/blob/master/images/model_car_output.jpg)
-#display results. works fine
 
-#Now write a function to return boxes as pytorch tensors
+As expected, the model now ignores trucks and only cars are detected.
+
+Finally, we can use the work above to write a function to return predicted boxes as Pytorch tensors
 ```
 def gen_bbox_predictions(im, predictor):
   outputs = predictor(im)
