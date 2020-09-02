@@ -16,7 +16,7 @@ The entire project can deployed on local server. I have written a REST API in Fl
 
 You are good to go. Upload an image and you'll see the results.
 
-## To-do
+## Todo
 
 1. Add documentation for automatic detection of parking spaces
 
